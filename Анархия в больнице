@@ -1,0 +1,135 @@
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        Hospital hospital = new Hospital();
+        hospital.ShowMenu();
+    }
+}
+
+public class SickMan
+{
+    public SickMan(string initials, int age, string disease)
+    {
+        Initials = initials;
+        Age = age;
+        Disease = disease;
+    }
+
+    public string Initials { get; private set; }
+    public int Age { get; private set; }
+    public string Disease { get; private set; }
+
+    public void ShowInfo()
+    {
+        Console.WriteLine($"Пациент - {Initials}. Возраст - {Age}, заболевание - {Disease}.");
+    }
+}
+
+public class Hospital
+{
+    private List<SickMan> _sickMans;
+
+    public Hospital()
+    {
+        _sickMans = new List<SickMan>
+        {
+            new SickMan("Попов Перт Викторович", 35, "Пневмония"),
+            new SickMan("Иванов Сергей Сергеевич", 20, "Менингит"),
+            new SickMan("Прохоров Илья Викторович", 19, "Пневмония"),
+            new SickMan("Федотов Федр Ильич", 46, "Инсульт"),
+            new SickMan("Зарубин Дмитрий Алексеевич", 28, "Менингит"),
+            new SickMan("Афонасьев Андрей Григорьевич", 52, "Инсульт"),
+            new SickMan("Фомин Арсений Васильевич", 39, "Аппендицит"),
+            new SickMan("Сумарокова Анна Леонидовна", 24, "Пневмония"),
+            new SickMan("Григорьева Марина Вячеславовна", 32, "Аппендицит"),
+            new SickMan("Григорьев Николай Викторович", 29, "Пневмония")
+        };
+    }
+
+    private void FilteredByInitials()
+    {
+        List<SickMan> filteredByInitials = _sickMans.OrderBy(sickMan => sickMan.Initials).ToList();
+
+        foreach (var sickMan in filteredByInitials)
+        {
+            sickMan.ShowInfo();
+        }
+    }
+
+    private void FilteredByAge()
+    {
+        List<SickMan> filteredByAge = _sickMans.OrderBy(sickMan => sickMan.Age).ToList();
+
+        foreach (var sickMan in filteredByAge)
+        {
+            sickMan.ShowInfo();
+        }
+    }
+
+    private void FilteredByDisease()
+    {
+        Console.WriteLine("Введите название заболевания: ");
+        string diseaseInput = Console.ReadLine();
+
+        List<SickMan> filteredByDisease = _sickMans.Where(sickMan => String.Equals(sickMan.Disease, diseaseInput, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        if(filteredByDisease.Count == 0)
+        {
+            Console.WriteLine("Пациентов с таким заболеванием нет.");
+        }
+
+        foreach (var sickMan in filteredByDisease)
+        {
+            sickMan.ShowInfo();
+        }
+    }
+
+    public void ShowMenu()
+    {
+        const string CommandFilteredSickManByInitials = "1";
+        const string CommandFilteredSickManByAge = "2";
+        const string CommandFilteredSickManByDisease = "3";
+        const string CommandExit = "4";
+
+        bool isWork = true;
+
+        while (isWork)
+        {
+            Console.WriteLine("Меню: ");
+            Console.WriteLine($"{CommandFilteredSickManByInitials} - Отсортировать всех пациентов по ФИО.");
+            Console.WriteLine($"{CommandFilteredSickManByAge} - Отсортировать всех пациентов по возрасту.");
+            Console.WriteLine($"{CommandFilteredSickManByDisease} - Отсортировать всех пациентов по заболеванию.");
+            Console.WriteLine($"{CommandExit} - Выйти из меню.");
+            string userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case CommandFilteredSickManByInitials:
+                    FilteredByInitials();
+                    break;
+
+                case CommandFilteredSickManByAge:
+                    FilteredByAge();
+                    break;
+
+                case CommandFilteredSickManByDisease:
+                    FilteredByDisease();
+                    break;
+
+                case CommandExit:
+                    isWork = false;
+                    Console.WriteLine("Вы вышли из меню.");
+                    break;
+
+                default:
+                    Console.WriteLine("Такой команды нет.");
+                    break;
+            }
+
+            Console.WriteLine("Нажмите любую клавишу чтобы продолжить");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
